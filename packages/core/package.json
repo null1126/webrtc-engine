@@ -2,13 +2,27 @@
   "name": "@webrtc-player/core",
   "version": "1.0.0",
   "description": "WebRTC Player core package",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./types": "./dist/index.d.mts",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsup --watch",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
