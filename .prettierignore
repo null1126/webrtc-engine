@@ -1,0 +1,13 @@
+dist
+node_modules
+coverage
+.vscode
+.idea
+*.log
+*.lock
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+.pnpm-store
+*.config.cjs
+commitlint.config.cjs
