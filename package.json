@@ -1,11 +1,11 @@
 {
-  "name": "@webrtc-player",
+  "name": "webrtc-player",
   "version": "1.0.0",
   "description": "WebRTC Player monorepo",
   "main": "index.js",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build",
+    "build": "turbo build --filter=@webrtc-player",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "prepare": "husky",
