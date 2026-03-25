@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build --filter=@webrtc-player",
+    "build": "turbo build --filter=@webrtc-player/core",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "prepare": "husky",
@@ -17,7 +17,7 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "run": "node ./scripts/run.js"
+    "start": "node ./scripts/run.js"
   },
   "keywords": [],
   "author": "",
