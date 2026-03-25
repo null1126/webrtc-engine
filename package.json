@@ -16,7 +16,8 @@
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "run": "node ./scripts/run.js"
   },
   "keywords": [],
   "author": "",
