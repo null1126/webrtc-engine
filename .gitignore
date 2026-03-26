@@ -47,8 +47,9 @@ coverage
 # Turbo
 .turbo
 
-# Vitepress
-.vitepress
+# Vitepress — only cache and build output, keep config and theme in git
+docs/*/cache
+.vitepress/dist
 
 # core
 packages/*/README.md

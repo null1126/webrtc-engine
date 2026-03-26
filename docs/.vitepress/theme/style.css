@@ -1,0 +1,222 @@
+/* 自定义主题样式 - 禁止蓝紫渐变 */
+
+/* 根变量覆盖 - 使用中性的绿色系替代蓝紫渐变 */
+:root {
+  /* 主色调 - 使用绿色系 */
+  --vp-c-brand-1: #10b981;
+  --vp-c-brand-2: #059669;
+  --vp-c-brand-3: #047857;
+  --vp-c-brand-soft: rgba(16, 185, 129, 0.12);
+
+  /* 背景色 */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-soft: #f7f8fa;
+  --vp-c-bg-mute: #f1f3f5;
+
+  /* 边框 */
+  --vp-c-divider: #e2e8f0;
+
+  /* 文本颜色 */
+  --vp-c-text-1: #1f2937;
+  --vp-c-text-2: #4b5563;
+  --vp-c-text-3: #9ca3af;
+
+  /* 侧边栏 */
+  --vp-sidebar-bg-color: #fafbfc;
+
+  /* 导航栏 */
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.8);
+
+  /* 代码高亮 */
+  --vp-code-bg: #f3f4f6;
+  --vp-code-color: #059669;
+
+  /* 按钮 */
+  --vp-button-brand-bg: #10b981;
+  --vp-button-brand-hover-bg: #059669;
+  --vp-button-brand-active-bg: #047857;
+
+  /* 链接 */
+  --vp-link-color: #10b981;
+  --vp-link-hover-color: #059669;
+
+  /* 搜索 */
+  --vp-search-bg: #ffffff;
+  --vp-search-border-color: #e2e8f0;
+
+  /* 代码块 */
+  --vp-code-block-bg: #f8fafc;
+
+  /* 选中文本 */
+  --vp-c-text-selection: rgba(16, 185, 129, 0.2);
+
+  /* Home 页 */
+  --vp-home-hero-name-color: #1f2937;
+  --vp-home-hero-name-background: none;
+
+  /* 渐变处理 - 使用绿色系线性渐变而非蓝紫 */
+  --vp-c-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* 暗色模式 */
+.dark {
+  /* 主色调 - 使用绿色系 */
+  --vp-c-brand-1: #34d399;
+  --vp-c-brand-2: #10b981;
+  --vp-c-brand-3: #059669;
+  --vp-c-brand-soft: rgba(52, 211, 153, 0.12);
+
+  /* 背景色 */
+  --vp-c-bg: #1a1a1a;
+  --vp-c-bg-soft: #242424;
+  --vp-c-bg-mute: #2d2d2d;
+
+  /* 边框 */
+  --vp-c-divider: #3d3d3d;
+
+  /* 文本颜色 */
+  --vp-c-text-1: #e5e7eb;
+  --vp-c-text-2: #9ca3af;
+  --vp-c-text-3: #6b7280;
+
+  /* 侧边栏 */
+  --vp-sidebar-bg-color: #1f1f1f;
+
+  /* 导航栏 */
+  --vp-nav-bg-color: rgba(26, 26, 26, 0.8);
+
+  /* 代码高亮 */
+  --vp-code-bg: #2d2d2d;
+  --vp-code-color: #34d399;
+
+  /* 按钮 */
+  --vp-button-brand-bg: #10b981;
+  --vp-button-brand-hover-bg: #059669;
+  --vp-button-brand-active-bg: #047857;
+
+  /* 链接 */
+  --vp-link-color: #34d399;
+  --vp-link-hover-color: #10b981;
+
+  /* 搜索 */
+  --vp-search-bg: #242424;
+  --vp-search-border-color: #3d3d3d;
+
+  /* 代码块 */
+  --vp-code-block-bg: #1f1f1f;
+
+  /* 选中文本 */
+  --vp-c-text-selection: rgba(52, 211, 153, 0.3);
+
+  /* Home 页 */
+  --vp-home-hero-name-color: #e5e7eb;
+  --vp-home-hero-name-background: none;
+
+  /* 渐变处理 - 使用绿色系线性渐变而非蓝紫 */
+  --vp-c-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}
+
+/* 移除 VitePress 默认的蓝紫渐变 */
+.VPButton.medium:is(.brand),
+.VPButton:is(.brand) {
+  background: var(--vp-c-brand-1);
+}
+
+/* Hero 部分渐变背景 - 绿色系 */
+.VPHero .tagline {
+  background: var(--vp-c-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 覆盖 VitePress 默认的品牌渐变 */
+:root {
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.1) 0%,
+    rgba(5, 150, 105, 0.1) 100%
+  );
+}
+
+.dark {
+  --vp-home-hero-image-background-image: linear-gradient(
+    135deg,
+    rgba(52, 211, 153, 0.15) 0%,
+    rgba(16, 185, 129, 0.15) 100%
+  );
+}
+
+/* 覆盖 VitePress 的品牌渐变 */
+.VPHome .VPHero .name .clip {
+  background: var(--vp-c-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* 自定义滚动条 - 适配主题 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-brand-1);
+}
+
+/* 自定义选择颜色 */
+::selection {
+  background: var(--vp-c-text-selection);
+}
+
+/* 代码块样式优化 */
+div[class*='language-'] {
+  background: var(--vp-code-block-bg) !important;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+}
+
+/* 链接样式优化 */
+a {
+  color: var(--vp-link-color);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--vp-link-hover-color);
+}
+
+/* 导航栏样式 */
+.VPNav {
+  backdrop-filter: blur(12px);
+  background: var(--vp-nav-bg-color);
+}
+
+/* 侧边栏样式 */
+.VPSidebar {
+  background: var(--vp-sidebar-bg-color);
+}
+
+/* 过渡动画 */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* 移除全局过渡的动画 */
+.VPButton,
+.VPNavBar,
+.VPSidebar,
+.VPDoc {
+  transition: none !important;
+}
