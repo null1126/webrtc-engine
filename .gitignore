@@ -49,3 +49,8 @@ coverage
 
 # Vitepress
 .vitepress
+
+# core
+packages/*/README.md
+packages/*/README_zh.md
+packages/*/LICENSE

@@ -1,6 +1,6 @@
 {
   "name": "@webrtc-player/core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "WebRTC Player core package",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
@@ -14,9 +14,9 @@
   },
   "files": [
     "dist",
-    "../../README.md",
-    "../../README_zh.md",
-    "../../LICENSE"
+    "README.md",
+    "README_zh.md",
+    "LICENSE"
   ],
   "exports": {
     ".": "./dist/index.mjs",

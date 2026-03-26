@@ -1,6 +1,37 @@
-import { select, intro, outro, isCancel, cancel, text } from '@clack/prompts';
+import { select, intro, outro, isCancel, cancel } from '@clack/prompts';
 import { execSync } from 'child_process';
-import { exit } from 'process';
+import { exit, cwd } from 'process';
+import path from 'path';
+import fs from 'fs/promises';
+
+/**
+ * 同步文档到包目录
+ * @param {string} packageName 包名
+ * @returns {Promise<boolean>} 是否同步成功
+ */
+const syncDocs = async (packageName) => {
+  try {
+    intro('同步文档到包目录');
+    const dirName = packageName.includes('/') ? packageName.split('/').pop() : packageName;
+    const packagePath = path.resolve(cwd(), 'packages', dirName);
+    if (!fs.access(packagePath)) {
+      throw new Error(`找不到目录: ${packagePath}，请检查 packageName 是否正确`);
+    }
+    const filesToSync = ['README.md', 'README_zh.md', 'LICENSE'];
+    for (const file of filesToSync) {
+      const source = path.resolve(cwd(), file);
+      const target = path.resolve(packagePath, file);
+      await fs.copyFile(source, target);
+      intro(`✅ 已同步 ${file} 到 ${packageName}`);
+    }
+  } catch (error) {
+    outro('同步文档到包目录失败', {
+      text: '同步文档到包目录失败!',
+      textColor: 'red',
+    });
+    throw error;
+  }
+};
 
 /**
  * 发布到 npm
@@ -8,21 +39,18 @@ import { exit } from 'process';
  */
 const publishPackage = async (packageName) => {
   try {
+    await syncDocs(packageName);
     intro('发布中...');
-    const otp = await text({
-      message: '请输入您的 npm 二次验证码 (OTP):',
-      placeholder: '若未开启可直接回车',
-      validate: (value) => {
-        if (value && !/^\d{6}$/.test(value)) return '验证码通常为 6 位数字';
-      },
+    const dirName = packageName.includes('/') ? packageName.split('/').pop() : packageName;
+    const packagePath = path.resolve(cwd(), 'packages', dirName);
+    if (!fs.access(packagePath)) {
+      throw new Error(`找不到目录: ${packagePath}，请检查 packageName 是否正确`);
+    }
+    const result = await execSync(`pnpm publish --no-git-checks --access public`, {
+      stdio: 'inherit',
+      cwd: packagePath,
+      shell: true,
     });
-    const otpFlag = otp ? `--otp ${otp}` : '';
-    const result = await execSync(
-      `pnpm -r publish --filter=${packageName} --no-git-checks --access public ${otpFlag}`,
-      {
-        stdio: 'inherit',
-      }
-    );
     outro('发布完成', {
       text: '发布完成!',
       textColor: 'green',
@@ -65,9 +93,23 @@ const buildPackage = async (packageName) => {
  * @returns {Promise<string>} 更新后的版本号
  */
 const updateVersion = async (packageName, versionOption) => {
-  return await execSync(`npm version ${versionOption} --workspace ${packageName}`, {
-    stdio: 'inherit',
-  });
+  try {
+    intro('更新版本号');
+    await execSync(`pnpm -F ${packageName} exec npm version ${versionOption}`, {
+      stdio: 'inherit',
+    });
+    outro('版本号更新完成', {
+      text: '版本号更新完成!',
+      textColor: 'green',
+    });
+    return true;
+  } catch (error) {
+    outro('版本号更新失败', {
+      text: '版本号更新失败!',
+      textColor: 'red',
+    });
+    throw error;
+  }
 };
 
 /**
@@ -92,12 +134,12 @@ const selectUpdateVersion = async () => {
 };
 
 /**
- * 请选择要发布的包?
- * @returns {Promise<string>} 发布的包: @webrtc-player
+ * 请选择要构建的包?
+ * @returns {Promise<string>} 构建的包: @webrtc-player/core
  */
-const selectPublishPackage = async () => {
+const selectBuildPackage = async () => {
   const packages = await select({
-    message: '请选择要发布的包?',
+    message: '请选择要构建的包?',
     options: [{ label: '@webrtc-player/core', value: '@webrtc-player/core' }],
   });
   if (isCancel(packages)) {
@@ -129,23 +171,23 @@ const selectPublish = async () => {
 /**
  * 构建并发布
  * @returns {Promise<void>}
+ *
+ * 具体流程：
+ * 1. 选择要构建的包
+ * 2. 开始构建
+ * 3. 选择要更新的版本号
+ * 4. 是否发布到 npm
  */
 export const buildAndPublish = async () => {
-  const publishOption = await selectPublish();
-  if (publishOption === 'no') {
-    await buildPackage();
-    return;
-  }
-  const packages = await selectPublishPackage();
+  const packageName = await selectBuildPackage();
+  await buildPackage(packageName);
   const versionOption = await selectUpdateVersion();
   if (versionOption !== '') {
-    intro('更新版本号');
-    await updateVersion(packages, versionOption);
-    outro('版本号更新完成', {
-      text: '版本号更新完成!',
-      textColor: 'green',
-    });
+    await updateVersion(packageName, versionOption);
   }
-  await buildPackage(packages);
-  await publishPackage(packages);
+  const publishOption = await selectPublish();
+  if (publishOption === 'no') {
+    exit(0);
+  }
+  await publishPackage(packageName);
 };
