@@ -1,55 +1,40 @@
-/**
- * 交换 SDP 请求
- */
-export interface PlayRequest {
-  /**
-   * 接口地址
-   */
-  api: string;
-  /**
-   * 播放地址
-   */
-  streamurl: string;
-  /**
-   * SDP
-   */
-  sdp: string;
-}
+import type { SignalingProvider } from '../rtc/types';
 
 /**
- * 交换 SDP 响应
+ * HTTP 信令响应
  */
-export interface PlayResponse {
-  /**
-   * 状态码
-   */
+export interface SignalingResponse {
+  /** 状态码 */
   code: number;
-  /**
-   * SDP
-   */
+  /** SDP */
   sdp: string;
 }
 
 /**
- * 交换 SDP
- * @param api 接口地址
- * @param data 请求数据
- * @returns SDP
+ * 默认 HTTP 信令提供者
+ * 使用 HTTP POST JSON 方式与信令服务器交换 SDP
  */
-export async function exchangeSDP(api: string, data: PlayRequest): Promise<string> {
-  const res = await fetch(api, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
+export class HttpSignalingProvider implements SignalingProvider {
+  constructor(private api: string) {}
 
-  const json: PlayResponse = await res.json();
-
-  if (json.code !== 0) {
-    throw new Error('SDP exchange failed');
+  async publish(sdp: string, url: string): Promise<string> {
+    return this.doExchange(sdp, url);
   }
 
-  return json.sdp;
+  async play(sdp: string, url: string): Promise<string> {
+    return this.doExchange(sdp, url);
+  }
+
+  private async doExchange(sdp: string, url: string): Promise<string> {
+    const res = await fetch(this.api, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api: this.api, streamurl: url, sdp }),
+    });
+    const json: SignalingResponse = await res.json();
+    if (json.code !== 0) {
+      throw new Error(`Signaling failed: code ${json.code}`);
+    }
+    return json.sdp;
+  }
 }

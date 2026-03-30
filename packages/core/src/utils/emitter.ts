@@ -1,57 +1,20 @@
-import { StateEnum } from '../constants/enums';
-
-/**
- * 定义每个事件类型对应的参数
- */
-export interface PlayerEvents {
-  /**
-   * 流事件
-   */
-  track: { stream: MediaStream; event: RTCTrackEvent };
-  /**
-   * 状态事件
-   */
-  state: StateEnum;
-  /**
-   * 错误事件
-   */
-  error: string;
-  /**
-   * ice 候选事件
-   */
-  icecandidate: RTCIceCandidate;
-  /**
-   * ice 连接状态事件
-   */
-  iceconnectionstate: RTCIceConnectionState;
-  /**
-   * ice 采集状态事件
-   */
-  icegatheringstate: RTCIceGatheringState;
-}
-
-// 事件类型联合
-export type EventType = keyof PlayerEvents;
-
-// 监听器类型
-export type EventListener<T extends EventType> = (data: PlayerEvents[T]) => void;
-
 /**
  * 事件发射器
  */
-export class EventEmitter {
-  private events: Map<EventType, EventListener<EventType>[]> = new Map();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class EventEmitter<TEventMap extends Record<string, any>> {
+  private events: Map<keyof TEventMap, Array<(data: unknown) => void>> = new Map();
 
   /**
    * 监听事件
    * @param event 事件类型
    * @param listener 事件监听器
    */
-  on<T extends EventType>(event: T, listener: EventListener<T>) {
+  on<K extends keyof TEventMap>(event: K, listener: (data: TEventMap[K]) => void): void {
     if (!this.events.has(event)) {
       this.events.set(event, []);
     }
-    this.events.get(event)!.push(listener as EventListener<EventType>);
+    this.events.get(event)!.push(listener as (data: unknown) => void);
   }
 
   /**
@@ -59,7 +22,7 @@ export class EventEmitter {
    * @param event 事件类型
    * @param data 事件数据
    */
-  emit<T extends EventType>(event: T, data: PlayerEvents[T]) {
+  emit<K extends keyof TEventMap>(event: K, data?: TEventMap[K]): void {
     this.events.get(event)?.forEach((listener) => listener(data));
   }
 
@@ -68,8 +31,11 @@ export class EventEmitter {
    * @param event 事件类型
    * @param listener 事件监听器
    */
-  off<T extends EventType>(event: T, listener: EventListener<T>) {
-    this.events.get(event)!.filter((l) => l !== listener);
+  off<K extends keyof TEventMap>(event: K, listener: (data: TEventMap[K]) => void): void {
+    this.events.set(
+      event,
+      (this.events.get(event) ?? []).filter((l) => l !== (listener as (data: unknown) => void))
+    );
   }
 
   /**
@@ -77,29 +43,18 @@ export class EventEmitter {
    * @param event 事件类型
    * @param listener 事件监听器
    */
-  once<T extends EventType>(event: T, listener: EventListener<T>) {
-    const wrappedListener = (data: PlayerEvents[T]) => {
-      listener(data);
-      this.off(event, wrappedListener as EventListener<T>);
+  once<K extends keyof TEventMap>(event: K, listener: (data: TEventMap[K]) => void): void {
+    const wrappedListener = (data: unknown) => {
+      listener(data as TEventMap[K]);
+      this.off(event, wrappedListener as (data: TEventMap[K]) => void);
     };
-    this.on(event, wrappedListener);
+    this.on(event, wrappedListener as (data: TEventMap[K]) => void);
   }
 
   /**
    * 检查事件是否存在
-   * @param event 事件类型
-   * @returns 是否存在
    */
-  has(event: EventType) {
-    return this.events.has(event) && (this.events.get(event)?.length ?? 0) > 0;
-  }
-
-  /**
-   * 获取事件监听器
-   * @param event 事件类型
-   * @returns 事件监听器
-   */
-  get(event: EventType) {
-    return this.events.get(event) || [];
+  has(event: keyof TEventMap): boolean {
+    return (this.events.get(event)?.length ?? 0) > 0;
   }
 }
