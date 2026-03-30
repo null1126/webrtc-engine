@@ -1,0 +1,84 @@
+/* ─── Badge wrapper ─── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Dot ─── */
+.status-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── State variants ─── */
+.status-badge[data-state='connecting'] {
+  background: var(--color-badge-connecting);
+  color: var(--color-badge-connecting-text);
+}
+.status-badge[data-state='connecting'] .status-badge__dot {
+  background: var(--color-dot-connecting);
+}
+
+.status-badge[data-state='connected'] {
+  background: var(--color-badge-connected);
+  color: var(--color-badge-connected-text);
+}
+.status-badge[data-state='connected'] .status-badge__dot {
+  background: var(--color-dot-connected);
+}
+
+.status-badge[data-state='disconnected'] {
+  background: var(--color-badge-disconnected);
+  color: var(--color-badge-disconnected-text);
+}
+.status-badge[data-state='disconnected'] .status-badge__dot {
+  background: var(--color-dot-disconnected);
+}
+
+.status-badge[data-state='failed'] {
+  background: var(--color-badge-failed);
+  color: var(--color-badge-failed-text);
+}
+.status-badge[data-state='failed'] .status-badge__dot {
+  background: var(--color-dot-failed);
+}
+
+.status-badge[data-state='closed'] {
+  background: var(--color-badge-closed);
+  color: var(--color-badge-closed-text);
+}
+.status-badge[data-state='closed'] .status-badge__dot {
+  background: var(--color-dot-closed);
+}
+
+.status-badge[data-state='switching'] {
+  background: var(--color-badge-switching);
+  color: var(--color-badge-switching-text);
+}
+.status-badge[data-state='switching'] .status-badge__dot {
+  background: var(--color-dot-switching);
+}
+
+.status-badge[data-state='switched'] {
+  background: var(--color-badge-switched);
+  color: var(--color-badge-switched-text);
+}
+.status-badge[data-state='switched'] .status-badge__dot {
+  background: var(--color-dot-switched);
+}
+
+.status-badge[data-state='destroyed'] {
+  background: var(--color-badge-destroyed);
+  color: var(--color-badge-destroyed-text);
+}
+.status-badge[data-state='destroyed'] .status-badge__dot {
+  background: var(--color-dot-destroyed);
+}

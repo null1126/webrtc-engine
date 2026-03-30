@@ -1,0 +1,201 @@
+import { useRef, useState } from 'react';
+import { RtcPlayer, RtcState } from '@webrtc-player/core';
+import { StatusBadge } from '../StatusBadge';
+import { StreamVideo } from '../StreamVideo';
+import { LogPanel, useLogs } from '../LogPanel';
+import './index.css';
+
+interface StreamPlayerProps {
+  streamUrl: string;
+  apiUrl: string;
+  onStreamUrlChange: (url: string) => void;
+  onApiUrlChange: (url: string) => void;
+}
+
+export function StreamPlayer({
+  streamUrl,
+  apiUrl,
+  onStreamUrlChange,
+  onApiUrlChange,
+}: StreamPlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<RtcPlayer | null>(null);
+
+  const [state, setState] = useState<RtcState>(RtcState.CLOSED);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const { logs, appendLog } = useLogs();
+
+  async function handleStart() {
+    if (playerRef.current) return;
+
+    const player = new RtcPlayer({
+      url: streamUrl,
+      api: apiUrl,
+      video: videoRef.current ?? undefined,
+    });
+
+    playerRef.current = player;
+
+    player.on('state', (s) => {
+      setState(s);
+      appendLog('info', `[状态] ${s}`);
+    });
+
+    player.on('error', (err) => {
+      appendLog('error', `[错误] ${err}`);
+    });
+
+    player.on('track', ({ stream }) => {
+      setRemoteStream(stream);
+      appendLog(
+        'info',
+        `[事件] track — 收到远端流 (${stream.getVideoTracks().length}v / ${stream.getAudioTracks().length}a)`
+      );
+    });
+
+    player.on('icecandidate', (candidate) => {
+      appendLog('info', `[ICE] ${candidate.candidate.slice(0, 60)}…`);
+    });
+
+    try {
+      await player.play();
+    } catch (err) {
+      appendLog('error', `[启动失败] ${err instanceof Error ? err.message : err}`);
+    }
+  }
+
+  function handleStop() {
+    playerRef.current?.destroy();
+    playerRef.current = null;
+    setRemoteStream(null);
+    setState(RtcState.DESTROYED);
+    appendLog('info', '[操作] 停止拉流');
+  }
+
+  async function handleSwitch(newUrl: string) {
+    if (!playerRef.current) return;
+    onStreamUrlChange(newUrl);
+    appendLog('info', `[操作] 切换至 ${newUrl}`);
+    try {
+      await playerRef.current.switchStream(newUrl);
+    } catch (err) {
+      appendLog('error', `[切换失败] ${err instanceof Error ? err.message : err}`);
+    }
+  }
+
+  const active = !!playerRef.current;
+
+  return (
+    <div className="stream-player-card">
+      {/* Header */}
+      <div className="stream-player-header">
+        <div className="stream-player-header-title">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect
+              x="1"
+              y="2"
+              width="11"
+              height="9"
+              rx="1.5"
+              stroke="var(--color-accent)"
+              strokeWidth="1.3"
+            />
+            <path
+              d="M13 5l2.5 2L13 9.5"
+              stroke="var(--color-accent)"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          拉流端
+        </div>
+        <StatusBadge state={state} />
+      </div>
+
+      {/* Body */}
+      <div className="stream-player-body">
+        {/* URL 配置 */}
+        <div className="sp-field">
+          <label className="sp-field-label">流地址 / Stream URL</label>
+          <input
+            type="text"
+            className={`sp-input${active ? '' : ' sp-input--mono'}`}
+            value={streamUrl}
+            onChange={(e) => onStreamUrlChange(e.target.value)}
+            placeholder="webrtc://localhost/live/livestream"
+            disabled={active}
+          />
+        </div>
+
+        <div className="sp-field">
+          <label className="sp-field-label">信令地址 / API URL</label>
+          <input
+            type="text"
+            className={`sp-input${active ? '' : ' sp-input--mono'}`}
+            value={apiUrl}
+            onChange={(e) => onApiUrlChange(e.target.value)}
+            placeholder="http://localhost:1985/rtc/v1/play/"
+            disabled={active}
+          />
+        </div>
+
+        {/* 快速切换流 */}
+        {active && (
+          <div className="sp-quick-switch">
+            <label className="sp-field-label">快速切换 / Quick Switch</label>
+            <div className="sp-quick-switch-list">
+              {['webrtc://localhost/live/livestream', 'webrtc://localhost/live/livestream1'].map(
+                (url) => (
+                  <button
+                    key={url}
+                    className={`sp-quick-switch-btn${streamUrl === url ? ' sp-quick-switch-btn--active' : ''}`}
+                    onClick={() => handleSwitch(url)}
+                  >
+                    {url.split('/').pop()}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 视频区域 */}
+        <div className="sp-preview">
+          <div className="sp-preview-header">
+            <span className="sp-field-label">播放画面 / Remote Stream</span>
+            {remoteStream && (
+              <span className="sp-preview-stats">
+                ● {remoteStream.getVideoTracks().length} 视频轨道 ·{' '}
+                {remoteStream.getAudioTracks().length} 音频轨道
+              </span>
+            )}
+          </div>
+          <StreamVideo stream={remoteStream} label="拉流画面" muted />
+        </div>
+
+        {/* 操作按钮 */}
+        <div className="sp-actions">
+          {!active ? (
+            <button className="sp-btn sp-btn--primary" onClick={handleStart}>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ flexShrink: 0 }}>
+                <polygon points="2,1 12,6.5 2,12" fill="currentColor" />
+              </svg>
+              开始拉流
+            </button>
+          ) : (
+            <button className="sp-btn sp-btn--danger" onClick={handleStop}>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style={{ flexShrink: 0 }}>
+                <rect x="1.5" y="1.5" width="10" height="10" rx="1" fill="currentColor" />
+              </svg>
+              停止
+            </button>
+          )}
+        </div>
+
+        {/* 日志 */}
+        <LogPanel logs={logs} />
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,71 @@
+/**
+ * 全局 CSS 变量
+ */
+:root {
+  /* Colors */
+  --color-bg: #f8f7f4;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f3f2ef;
+  --color-border: #e5e4e0;
+  --color-border-focus: #d4d3cf;
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #6b6b6b;
+  --color-text-muted: #9a9a9a;
+  --color-text-inverse: #ffffff;
+
+  --color-accent: #c2410c;
+  --color-accent-light: #fed7aa;
+
+  --color-status-connecting: #d97706;
+  --color-status-connected: #16a34a;
+  --color-status-disconnected: #6b6b6b;
+  --color-status-failed: #dc2626;
+  --color-status-switching: #d97706;
+  --color-status-closed: #9a9a9a;
+
+  --color-input-bg: #ffffff;
+  --color-input-border: #d4d3cf;
+  --color-input-border-focus: #c2410c;
+  --color-input-placeholder: #9a9a9a;
+
+  --color-badge-connecting: #fef3c7;
+  --color-badge-connecting-text: #92400e;
+  --color-badge-connected: #dcfce7;
+  --color-badge-connected-text: #166534;
+  --color-badge-disconnected: #f4f4f4;
+  --color-badge-disconnected-text: #6b6b6b;
+  --color-badge-failed: #fee2e2;
+  --color-badge-failed-text: #991b1b;
+  --color-badge-switching: #fef3c7;
+  --color-badge-switching-text: #92400e;
+  --color-badge-switched: #dcfce7;
+  --color-badge-switched-text: #166534;
+  --color-badge-closed: #f4f4f4;
+  --color-badge-closed-text: #6b6b6b;
+  --color-badge-destroyed: #f4f4f4;
+  --color-badge-destroyed-text: #6b6b6b;
+
+  /* Status dot colors */
+  --color-dot-connecting: #d97706;
+  --color-dot-connected: #16a34a;
+  --color-dot-disconnected: #6b6b6b;
+  --color-dot-failed: #dc2626;
+  --color-dot-closed: #9a9a9a;
+  --color-dot-switching: #d97706;
+  --color-dot-switched: #16a34a;
+  --color-dot-destroyed: #9a9a9a;
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.07);
+  --shadow-card-hover: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+  --shadow-input: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}

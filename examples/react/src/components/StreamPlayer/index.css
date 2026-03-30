@@ -1,0 +1,157 @@
+/* ─── Container ─── */
+.stream-player-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ─── Header ─── */
+.stream-player-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stream-player-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ─── Body ─── */
+.stream-player-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Form Fields ─── */
+.sp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Input ─── */
+.sp-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-input-border);
+  background: var(--color-input-bg);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.sp-input:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-hover);
+  opacity: 0.6;
+}
+
+.sp-input:focus {
+  border-color: var(--color-input-border-focus);
+}
+
+.sp-input--mono {
+  font-family: var(--font-mono);
+}
+
+/* ─── Quick Switch ─── */
+.sp-quick-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sp-quick-switch-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sp-quick-switch-btn {
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sp-quick-switch-btn--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-light);
+  color: var(--color-accent);
+}
+
+/* ─── Preview Section ─── */
+.sp-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sp-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sp-preview-stats {
+  font-size: 11px;
+  color: var(--color-status-connected);
+}
+
+/* ─── Action Buttons ─── */
+.sp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.sp-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sp-btn--primary {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent);
+}
+
+.sp-btn--danger {
+  background: #fff;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
