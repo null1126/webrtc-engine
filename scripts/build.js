@@ -17,7 +17,7 @@ const syncDocs = async (packageName) => {
     if (!fs.access(packagePath)) {
       throw new Error(`找不到目录: ${packagePath}，请检查 packageName 是否正确`);
     }
-    const filesToSync = ['README.md', 'README_zh.md', 'LICENSE'];
+    const filesToSync = ['README.md', 'README_en.md', 'LICENSE'];
     for (const file of filesToSync) {
       const source = path.resolve(cwd(), file);
       const target = path.resolve(packagePath, file);
