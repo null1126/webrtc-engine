@@ -117,7 +117,7 @@ export function StreamPlayer({
       <div className="stream-player-body">
         {/* URL 配置 */}
         <div className="sp-field">
-          <label className="sp-field-label">流地址 / Stream URL</label>
+          <label className="field-label">流地址 / Stream URL</label>
           <input
             type="text"
             className={`sp-input${active ? '' : ' sp-input--mono'}`}
@@ -129,7 +129,7 @@ export function StreamPlayer({
         </div>
 
         <div className="sp-field">
-          <label className="sp-field-label">信令地址 / API URL</label>
+          <label className="field-label">信令地址 / API URL</label>
           <input
             type="text"
             className={`sp-input${active ? '' : ' sp-input--mono'}`}
@@ -143,7 +143,7 @@ export function StreamPlayer({
         {/* 快速切换流 */}
         {active && (
           <div className="sp-quick-switch">
-            <label className="sp-field-label">快速切换 / Quick Switch</label>
+            <label className="field-label">快速切换 / Quick Switch</label>
             <div className="sp-quick-switch-list">
               {['webrtc://localhost/live/livestream', 'webrtc://localhost/live/livestream1'].map(
                 (url) => (
@@ -163,7 +163,7 @@ export function StreamPlayer({
         {/* 视频区域 */}
         <div className="sp-preview">
           <div className="sp-preview-header">
-            <span className="sp-field-label">播放画面 / Remote Stream</span>
+            <span className="field-label">播放画面 / Remote Stream</span>
             {remoteStream && (
               <span className="sp-preview-stats">
                 ● {remoteStream.getVideoTracks().length} 视频轨道 ·{' '}
