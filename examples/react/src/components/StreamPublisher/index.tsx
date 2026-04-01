@@ -90,7 +90,6 @@ export function StreamPublisher({
   function handleStop() {
     publisherRef.current?.destroy();
     publisherRef.current = null;
-    setLocalStream(null);
     setPermissionDenied(null);
     setState(RtcState.DESTROYED);
     appendLog('info', '[操作] 停止推流');
@@ -201,7 +200,7 @@ export function StreamPublisher({
               </span>
             )}
           </div>
-          <StreamVideo stream={localStream} label="本地预览" muted />
+          <StreamVideo ref={videoRef} label="本地预览" muted />
           {permissionDenied && (
             <div className="permission-alert">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

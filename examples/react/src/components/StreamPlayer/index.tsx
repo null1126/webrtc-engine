@@ -24,8 +24,8 @@ export function StreamPlayer({
   const playerRef = useRef<RtcPlayer | null>(null);
 
   const [state, setState] = useState<RtcState>(RtcState.CLOSED);
-  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [perfData, setPerfData] = useState<PerformanceData | null>(null);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const { logs, appendLog } = useLogs();
 
   async function handleStart() {
@@ -75,7 +75,6 @@ export function StreamPlayer({
   function handleStop() {
     playerRef.current?.destroy();
     playerRef.current = null;
-    setRemoteStream(null);
     setPerfData(null);
     setState(RtcState.DESTROYED);
     appendLog('info', '[操作] 停止拉流');
@@ -180,7 +179,7 @@ export function StreamPlayer({
               </span>
             )}
           </div>
-          <StreamVideo stream={remoteStream} label="拉流画面" muted />
+          <StreamVideo ref={videoRef} label="拉流画面" muted />
           {perfData && (
             <div className="perf-panel">
               <div className="perf-panel-title">性能监控</div>
