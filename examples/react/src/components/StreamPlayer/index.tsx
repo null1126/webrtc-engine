@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { RtcPlayer, RtcState } from '@webrtc-player/core';
+import { createPerformancePlugin } from '@webrtc-player/plugin-performance';
+import type { PerformanceData } from '@webrtc-player/plugin-performance';
 import { StatusBadge } from '../StatusBadge';
 import { StreamVideo } from '../StreamVideo';
 import { LogPanel, useLogs } from '../LogPanel';
@@ -23,15 +25,21 @@ export function StreamPlayer({
 
   const [state, setState] = useState<RtcState>(RtcState.CLOSED);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [perfData, setPerfData] = useState<PerformanceData | null>(null);
   const { logs, appendLog } = useLogs();
 
   async function handleStart() {
     if (playerRef.current) return;
 
+    const performancePlugin = createPerformancePlugin({ interval: 1000 }, (data) => {
+      setPerfData(data);
+    });
+
     const player = new RtcPlayer({
       url: streamUrl,
       api: apiUrl,
       video: videoRef.current ?? undefined,
+      plugins: [performancePlugin],
     });
 
     playerRef.current = player;
@@ -68,6 +76,7 @@ export function StreamPlayer({
     playerRef.current?.destroy();
     playerRef.current = null;
     setRemoteStream(null);
+    setPerfData(null);
     setState(RtcState.DESTROYED);
     appendLog('info', '[操作] 停止拉流');
   }
@@ -172,6 +181,53 @@ export function StreamPlayer({
             )}
           </div>
           <StreamVideo stream={remoteStream} label="拉流画面" muted />
+          {perfData && (
+            <div className="perf-panel">
+              <div className="perf-panel-title">性能监控</div>
+              {perfData.fps && (
+                <div className="perf-row">
+                  <span className="perf-label">FPS</span>
+                  <span className="perf-value">{perfData.fps.fps}</span>
+                </div>
+              )}
+              {perfData.network && (
+                <>
+                  <div className="perf-row">
+                    <span className="perf-label">接收码率</span>
+                    <span className="perf-value">
+                      {perfData.network.bitrateReceived > 0
+                        ? `${(perfData.network.bitrateReceived / 1000).toFixed(0)} kbps`
+                        : '—'}
+                    </span>
+                  </div>
+                  <div className="perf-row">
+                    <span className="perf-label">RTT</span>
+                    <span className="perf-value">
+                      {perfData.network.rtt != null ? `${perfData.network.rtt} ms` : '—'}
+                    </span>
+                  </div>
+                  <div className="perf-row">
+                    <span className="perf-label">抖动</span>
+                    <span className="perf-value">
+                      {perfData.network.jitter != null
+                        ? `${perfData.network.jitter.toFixed(1)} ms`
+                        : '—'}
+                    </span>
+                  </div>
+                  <div className="perf-row">
+                    <span className="perf-label">收包丢包</span>
+                    <span className="perf-value">
+                      {(perfData.network.packetsReceivedLostRate * 100).toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="perf-row">
+                    <span className="perf-label">ICE 状态</span>
+                    <span className="perf-value">{perfData.network.connectionState}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* 操作按钮 */}
