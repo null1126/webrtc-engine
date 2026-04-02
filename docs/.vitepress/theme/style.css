@@ -220,3 +220,7 @@ a:hover {
 .VPDoc {
   transition: none !important;
 }
+
+.container .image-bg {
+  background-image: none;
+}

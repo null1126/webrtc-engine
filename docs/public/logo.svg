@@ -1,32 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#00d1ff" />
     </linearGradient>
   </defs>
 
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="90" fill="url(#grad)" />
-
-  <!-- Play button triangle -->
-  <polygon points="80,60 80,140 140,100" fill="#ffffff" />
-
-  <!-- Signal waves -->
-  <path
-    d="M 40 100 Q 40 50 100 50"
+  <!-- 外框：圆角矩形描边，水平绿渐变 -->
+  <rect
+    x="22"
+    y="28"
+    width="156"
+    height="144"
+    rx="34"
+    ry="34"
     fill="none"
-    stroke="#ffffff"
-    stroke-width="6"
-    stroke-linecap="round"
-    opacity="0.6"
+    stroke="url(#grad)"
+    stroke-width="22"
+    stroke-linejoin="round"
   />
-  <path
-    d="M 30 100 Q 30 35 100 35"
-    fill="none"
+
+  <!-- 播放键：朝左三角，居中 -->
+  <polygon
+    points="125,100 75,74 75,126"
+    fill="#ffffff"
     stroke="#ffffff"
     stroke-width="6"
+    stroke-linejoin="round"
     stroke-linecap="round"
-    opacity="0.3"
   />
 </svg>
