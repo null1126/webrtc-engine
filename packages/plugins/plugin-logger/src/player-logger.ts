@@ -1,8 +1,4 @@
-import type {
-  RtcPlayerPlugin,
-  RtcPlayerPluginInstance,
-  PluginPhaseValue,
-} from '@webrtc-player/core/plugins/types';
+import type { RtcPlayerPlugin, PluginPhaseValue } from '@webrtc-player/core/plugins/types';
 import type { LogCallback, LogLevel, LoggerPluginOptions } from './types';
 import { formatTime, nextId } from './utils';
 
@@ -34,7 +30,7 @@ export function createPlayerLoggerPlugin(
   const plugin: RtcPlayerPlugin = {
     name: 'logger',
 
-    install(_instance: RtcPlayerPluginInstance) {
+    install() {
       const emit = (level: LogLevel, message: string, phase: PluginPhaseValue) => {
         if (level === 'debug' && !includeDebug) return;
         callback({

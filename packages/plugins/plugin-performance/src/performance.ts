@@ -115,7 +115,7 @@ export function createPerformancePlugin(
   const plugin: RtcPlayerPlugin = {
     name: 'performance',
 
-    install(instance: RtcPlayerPluginInstance) {
+    install(instance) {
       lastReportTime = performance.now();
       lastTimestamp = performance.now();
 

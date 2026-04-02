@@ -47,7 +47,7 @@ export class PluginManager<T extends AnyPlugin = AnyPlugin, S = unknown> {
    * @returns 返回 this，支持链式调用
    */
   use(plugin: T): this {
-    if (this.plugins.some((p) => p.name === plugin.name)) {
+    if (this.has(plugin.name)) {
       console.warn(`[PluginManager] Plugin "${plugin.name}" is already registered.`);
       return this;
     }
