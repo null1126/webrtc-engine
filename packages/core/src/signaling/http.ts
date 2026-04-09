@@ -1,4 +1,4 @@
-import type { SignalingProvider } from '../rtc/types';
+import type { SignalingProvider } from './types';
 
 /**
  * HTTP 信令响应

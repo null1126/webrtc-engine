@@ -3,13 +3,19 @@ import { HttpSignalingProvider } from '../signaling/http';
 import { PluginManager } from '../plugins/manager';
 import { PluginPhase } from '../plugins/types';
 import type { MediaKind, RtcPlayerEvents, RtcPlayerOptions } from '../rtc/types';
+import type { PlayerSignalingProvider } from '../signaling/types';
 import { RtcState } from '../rtc/types';
 import type { RtcPlayerPlugin, RtcPlayerPluginInstance } from '../plugins/types';
 
 /**
  * RTC 拉流播放器
  */
-export class RtcPlayer extends RtcBase<RtcPlayerEvents, RtcPlayerPlugin, RtcPlayerPluginInstance> {
+export class RtcPlayer extends RtcBase<
+  RtcPlayerEvents,
+  RtcPlayerPlugin,
+  RtcPlayerPluginInstance,
+  PlayerSignalingProvider
+> {
   private target?: HTMLVideoElement | HTMLAudioElement;
   private mediaKind: MediaKind;
   private _currentStream: MediaStream | null = null;

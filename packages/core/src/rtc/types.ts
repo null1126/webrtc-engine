@@ -1,26 +1,5 @@
 import type { RtcPlayerPlugin, RtcPublisherPlugin } from '../plugins/types';
-
-/**
- * 信令提供者接口
- * 用户可自定义实现，支持 HTTP / WebSocket / GRPC 等任何信令协议
- */
-export interface SignalingProvider {
-  /**
-   * 推流信令交换
-   * @param sdp 本地 SDP offer
-   * @param url 推流地址
-   * @returns 远端 SDP answer
-   */
-  publish(sdp: string, url: string): Promise<string>;
-
-  /**
-   * 拉流信令交换
-   * @param sdp 本地 SDP offer
-   * @param url 拉流地址
-   * @returns 远端 SDP answer
-   */
-  play(sdp: string, url: string): Promise<string>;
-}
+import type { PlayerSignalingProvider, PublisherSignalingProvider } from '../signaling/types';
 
 /**
  * 媒体源类型
@@ -96,8 +75,6 @@ export interface RtcBaseOptions {
   url: string;
   /** 信令服务器地址 */
   api: string;
-  /** 自定义信令提供者（优先于 api） */
-  signaling?: SignalingProvider;
   /** RTCConfiguration（可选） */
   config?: RTCConfiguration;
   /** 重连配置（可选） */
@@ -116,6 +93,8 @@ export type MediaKind = 'audio' | 'video' | 'all';
  * 拉流选项
  */
 export interface RtcPlayerOptions extends RtcBaseOptions {
+  /** 自定义拉流信令提供者（优先于 api） */
+  signaling?: PlayerSignalingProvider;
   /** 目标渲染元素（可选，自动绑定远端流） */
   target?: HTMLVideoElement | HTMLAudioElement;
   /** 媒体类型配置（默认: 'all'） */
@@ -128,6 +107,8 @@ export interface RtcPlayerOptions extends RtcBaseOptions {
  * 推流选项
  */
 export interface RtcPublisherOptions extends RtcBaseOptions {
+  /** 自定义推流信令提供者（优先于 api） */
+  signaling?: PublisherSignalingProvider;
   /** 媒体源 */
   source: MediaSource;
   /** 预览目标元素（可选） */

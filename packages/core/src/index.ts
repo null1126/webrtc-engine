@@ -2,6 +2,7 @@ export * from './rtc/base';
 export * from './rtc/player';
 export * from './rtc/publisher';
 export * from './rtc/types';
+export * from './signaling/types';
 export * from './signaling/http';
 export * from './plugins/types';
 export * from './plugins/manager';

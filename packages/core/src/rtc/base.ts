@@ -1,6 +1,7 @@
 import { EventEmitter } from '../utils/emitter';
 import { RetryController } from '../utils/retry-controller';
-import type { RtcBaseEvents, RtcBaseOptions, SignalingProvider } from './types';
+import type { RtcBaseEvents, RtcBaseOptions } from './types';
+import type { SignalingProvider } from '../signaling/types';
 import { RtcState } from './types';
 import { PluginManager } from '../plugins/manager';
 import { PluginPhase } from '../plugins/types';
@@ -23,11 +24,12 @@ export abstract class RtcBase<
   TEvents extends RtcBaseEvents = RtcBaseEvents,
   TPlugin extends AnyPlugin = AnyPlugin,
   TInstance = unknown,
+  TSignaling = SignalingProvider,
 > {
   protected pc: RTCPeerConnection | null = null;
   protected emitter = new EventEmitter<TEvents>();
   protected url: string;
-  protected signaling: SignalingProvider;
+  protected signaling: TSignaling;
 
   /** 插件管理器，由子类管理 */
   protected pluginManager: PluginManager<TPlugin, TInstance>;
@@ -47,7 +49,7 @@ export abstract class RtcBase<
 
   constructor(
     options: RtcBaseOptions,
-    signaling: SignalingProvider,
+    signaling: TSignaling,
     pluginManager: PluginManager<TPlugin, TInstance>
   ) {
     this.url = options.url;

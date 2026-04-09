@@ -10,6 +10,7 @@ import type {
 } from './types';
 import { RtcState } from './types';
 import type { HookContext, RtcPublisherPlugin, RtcPublisherPluginInstance } from '../plugins/types';
+import type { PublisherSignalingProvider } from '../signaling/types';
 
 /**
  * RTC 推流器
@@ -17,7 +18,8 @@ import type { HookContext, RtcPublisherPlugin, RtcPublisherPluginInstance } from
 export class RtcPublisher extends RtcBase<
   RtcPublisherEvents,
   RtcPublisherPlugin,
-  RtcPublisherPluginInstance
+  RtcPublisherPluginInstance,
+  PublisherSignalingProvider
 > {
   private _source: MediaSource;
   private target?: HTMLVideoElement | HTMLAudioElement;
