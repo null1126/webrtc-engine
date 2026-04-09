@@ -68,6 +68,22 @@ export interface ReconnectOptions {
 }
 
 /**
+ * ICE 行为配置
+ */
+export interface IceOptions {
+  /**
+   * 是否等待 ICE 收集完成后再交换 SDP（默认: true）
+   * - true: 非 Trickle ICE 模式，先收集再交换
+   * - false: 立即交换 SDP，依赖后续候选补充
+   */
+  waitForComplete?: boolean;
+  /**
+   * 等待 ICE 收集完成的超时时间（毫秒，默认: 3000）
+   */
+  gatheringTimeout?: number;
+}
+
+/**
  * 公共选项
  */
 export interface RtcBaseOptions {
@@ -79,6 +95,8 @@ export interface RtcBaseOptions {
   config?: RTCConfiguration;
   /** 重连配置（可选） */
   reconnect?: ReconnectOptions;
+  /** ICE 配置（可选） */
+  ice?: IceOptions;
 }
 
 /**

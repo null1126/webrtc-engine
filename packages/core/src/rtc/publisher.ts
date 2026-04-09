@@ -199,7 +199,11 @@ export class RtcPublisher extends RtcBase<
     const offerSDP = modifiedOffer ?? offer;
     await this.pc.setLocalDescription(offerSDP);
 
-    const answerSDP = await this.signaling.publish(offerSDP.sdp!, this.url);
+    // 等待 ICE 收集完成后再交换信令（非 Trickle ICE）
+    await this.waitForIceGatheringComplete();
+
+    const localSdp = this.pc.localDescription?.sdp ?? offerSDP.sdp!;
+    const answerSDP = await this.signaling.publish(localSdp, this.url);
     // Hook: onBeforeSetRemoteDescription
     const remoteCtx = this.createHookContext(PluginPhase.PUBLISHER_BEFORE_SET_REMOTE_DESCRIPTION);
     const modifiedAnswer = this.pluginManager.pipeHook(remoteCtx, 'onBeforeSetRemoteDescription', {
