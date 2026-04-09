@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { RtcPlayer, RtcState } from '@webrtc-player/core';
+import { RtcPlayer, RtcState, type RtcPlayerPlugin } from '@webrtc-player/core';
 import { createPerformancePlugin } from '@webrtc-player/plugin-performance';
 import { createPlayerLoggerPlugin } from '@webrtc-player/plugin-logger';
 import type { PerformanceData } from '@webrtc-player/plugin-performance';
@@ -38,9 +38,12 @@ export function StreamPlayer({
       }
     });
 
-    const performancePlugin = createPerformancePlugin({ interval: 1000 }, (data) => {
-      setPerfData(data);
-    });
+    const performancePlugin: RtcPlayerPlugin = createPerformancePlugin(
+      { interval: 1000 },
+      (data) => {
+        setPerfData(data);
+      }
+    );
 
     const player = new RtcPlayer({
       url: streamUrl,

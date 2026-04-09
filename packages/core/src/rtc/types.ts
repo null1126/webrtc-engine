@@ -91,11 +91,11 @@ export interface RtcBaseOptions {
   url: string;
   /** 信令服务器地址 */
   api: string;
-  /** RTCConfiguration（可选） */
+  /** RTCConfiguration */
   config?: RTCConfiguration;
-  /** 重连配置（可选） */
+  /** 重连配置 */
   reconnect?: ReconnectOptions;
-  /** ICE 配置（可选） */
+  /** ICE 配置 */
   ice?: IceOptions;
 }
 
@@ -113,7 +113,7 @@ export type MediaKind = 'audio' | 'video' | 'all';
 export interface RtcPlayerOptions extends RtcBaseOptions {
   /** 自定义拉流信令提供者（优先于 api） */
   signaling?: PlayerSignalingProvider;
-  /** 目标渲染元素（可选，自动绑定远端流） */
+  /** 目标渲染元素（自动绑定远端流） */
   target?: HTMLVideoElement | HTMLAudioElement;
   /** 媒体类型配置（默认: 'all'） */
   media?: MediaKind;
@@ -129,7 +129,7 @@ export interface RtcPublisherOptions extends RtcBaseOptions {
   signaling?: PublisherSignalingProvider;
   /** 媒体源 */
   source: MediaSource;
-  /** 预览目标元素（可选） */
+  /** 预览目标元素 */
   target?: HTMLVideoElement | HTMLAudioElement;
   /** 插件列表 */
   plugins?: RtcPublisherPlugin[];
