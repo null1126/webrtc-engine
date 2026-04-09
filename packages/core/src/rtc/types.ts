@@ -1,5 +1,4 @@
 import type { RtcPlayerPlugin, RtcPublisherPlugin } from '../plugins/types';
-export type { VideoFrameData, ProcessedVideoFrame } from '../plugins/types';
 
 /**
  * 信令提供者接口
@@ -70,6 +69,26 @@ export interface MediaSourceCustom {
 }
 
 /**
+ * 重连配置
+ */
+export interface ReconnectOptions {
+  /** 是否开启自动重连（默认: false） */
+  enabled?: boolean;
+  /** 最大重试次数（默认: 5） */
+  maxRetries?: number;
+  /** 重试间隔（毫秒），启用指数退避时此值为初始间隔（默认: 2000） */
+  interval?: number;
+  /** 是否启用指数退避（默认: false） */
+  exponential?: boolean;
+  /** 重试最大间隔（毫秒） */
+  maxInterval?: number;
+  /** 随机抖动比例（0~1） */
+  jitterRatio?: number;
+  /** 进入 disconnected 后的兜底重连延迟（毫秒，默认 5000） */
+  disconnectedTimeout?: number;
+}
+
+/**
  * 公共选项
  */
 export interface RtcBaseOptions {
@@ -81,6 +100,8 @@ export interface RtcBaseOptions {
   signaling?: SignalingProvider;
   /** RTCConfiguration（可选） */
   config?: RTCConfiguration;
+  /** 重连配置（可选） */
+  reconnect?: ReconnectOptions;
 }
 
 /**
@@ -95,8 +116,8 @@ export type MediaKind = 'audio' | 'video' | 'all';
  * 拉流选项
  */
 export interface RtcPlayerOptions extends RtcBaseOptions {
-  /** 视频元素（可选，自动绑定远端流） */
-  video?: HTMLVideoElement;
+  /** 目标渲染元素（可选，自动绑定远端流） */
+  target?: HTMLVideoElement | HTMLAudioElement;
   /** 媒体类型配置（默认: 'all'） */
   media?: MediaKind;
   /** 插件列表 */
@@ -109,8 +130,8 @@ export interface RtcPlayerOptions extends RtcBaseOptions {
 export interface RtcPublisherOptions extends RtcBaseOptions {
   /** 媒体源 */
   source: MediaSource;
-  /** 预览视频元素（可选） */
-  video?: HTMLVideoElement;
+  /** 预览目标元素（可选） */
+  target?: HTMLVideoElement | HTMLAudioElement;
   /** 插件列表 */
   plugins?: RtcPublisherPlugin[];
 }
@@ -138,6 +159,10 @@ export interface RtcBaseEvents {
   icecandidate: RTCIceCandidate;
   iceconnectionstate: RTCIceConnectionState;
   icegatheringstate: RTCIceGatheringState;
+  /** 重连状态变化 */
+  reconnecting: { retryCount: number; maxRetries: number; interval: number };
+  /** 重连失败（已达最大次数） */
+  reconnectfailed: { maxRetries: number };
 }
 
 /**

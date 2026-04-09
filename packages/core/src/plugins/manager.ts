@@ -3,7 +3,6 @@ import type {
   HookContext,
   RtcPlayerNotifyHookName,
   RtcPlayerPipeHookName,
-  RtcPlayerAsyncPipeHookName,
   RtcPublisherNotifyHookName,
   RtcPublisherPipeHookName,
   RtcPublisherAsyncPipeHookName,
@@ -47,7 +46,7 @@ export class PluginManager<T extends AnyPlugin = AnyPlugin, S = unknown> {
    * @returns 返回 this，支持链式调用
    */
   use(plugin: T): this {
-    if (this.plugins.some((p) => p.name === plugin.name)) {
+    if (this.has(plugin.name)) {
       console.warn(`[PluginManager] Plugin "${plugin.name}" is already registered.`);
       return this;
     }
@@ -211,7 +210,6 @@ export class PluginManager<T extends AnyPlugin = AnyPlugin, S = unknown> {
    * 第一个有返回值的插件决定最终结果，之后的插件收到该结果作为输入。
    *
    * 支持的钩子：
-   * - onBeforeVideoRender (player)
    * - onBeforeAttachStream / onBeforeAttachTrack (publisher)
    *
    * @param ctx     插件上下文
@@ -221,7 +219,7 @@ export class PluginManager<T extends AnyPlugin = AnyPlugin, S = unknown> {
    */
   async asyncPipeHook<Ret>(
     ctx: HookContext<S>,
-    hook: RtcPlayerAsyncPipeHookName | RtcPublisherAsyncPipeHookName,
+    hook: RtcPublisherAsyncPipeHookName,
     initial: Ret,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]

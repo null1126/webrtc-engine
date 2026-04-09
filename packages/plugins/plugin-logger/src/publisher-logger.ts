@@ -1,8 +1,4 @@
-import type {
-  RtcPublisherPlugin,
-  RtcPublisherPluginInstance,
-  PluginPhaseValue,
-} from '@webrtc-player/core/plugins/types';
+import type { RtcPublisherPlugin, PluginPhaseValue } from '@webrtc-player/core/plugins/types';
 import type { LogCallback, LogLevel, LoggerPluginOptions } from './types';
 import { formatTime, getSourceName, nextId } from './utils';
 
@@ -34,7 +30,7 @@ export function createPublisherLoggerPlugin(
   const plugin: RtcPublisherPlugin = {
     name: 'logger',
 
-    install(_instance: RtcPublisherPluginInstance) {
+    install() {
       const emit = (level: LogLevel, message: string, phase: PluginPhaseValue) => {
         if (level === 'debug' && !includeDebug) return;
         callback({
@@ -66,6 +62,18 @@ export function createPublisherLoggerPlugin(
           `[ICE] ${c ? c.slice(0, 80) + (c.length > 80 ? '…' : '') : '(空候选)'}`,
           ctx.phase
         );
+      };
+
+      interceptors.onReconnecting = (ctx, data) => {
+        emit('info', `[重连] 重连中 (${data.retryCount}/${data.maxRetries})`, ctx.phase);
+      };
+
+      interceptors.onReconnectFailed = (ctx, data) => {
+        emit('error', `[重连] 重连失败 (${data.maxRetries})`, ctx.phase);
+      };
+
+      interceptors.onReconnected = (ctx) => {
+        emit('info', `[重连] 重连成功`, ctx.phase);
       };
 
       interceptors.onError = (ctx, data) => {

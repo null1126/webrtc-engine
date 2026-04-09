@@ -1,8 +1,4 @@
-import type {
-  RtcPlayerPlugin,
-  RtcPlayerPluginInstance,
-  PluginPhaseValue,
-} from '@webrtc-player/core/plugins/types';
+import type { RtcPlayerPlugin, PluginPhaseValue } from '@webrtc-player/core/plugins/types';
 import type { LogCallback, LogLevel, LoggerPluginOptions } from './types';
 import { formatTime, nextId } from './utils';
 
@@ -34,7 +30,7 @@ export function createPlayerLoggerPlugin(
   const plugin: RtcPlayerPlugin = {
     name: 'logger',
 
-    install(_instance: RtcPlayerPluginInstance) {
+    install() {
       const emit = (level: LogLevel, message: string, phase: PluginPhaseValue) => {
         if (level === 'debug' && !includeDebug) return;
         callback({
@@ -68,15 +64,32 @@ export function createPlayerLoggerPlugin(
         );
       };
 
+      interceptors.onReconnecting = (ctx, data) => {
+        emit('info', `[重连] 重连中 (${data.retryCount}/${data.maxRetries})`, ctx.phase);
+      };
+
+      interceptors.onReconnectFailed = (ctx, data) => {
+        emit('error', `[重连] 重连失败 (${data.maxRetries})`, ctx.phase);
+      };
+
+      interceptors.onReconnected = (ctx) => {
+        emit('info', `[重连] 重连成功`, ctx.phase);
+      };
+
       interceptors.onError = (ctx, data) => {
         const msg = data.error instanceof Error ? data.error.message : String(data.error);
         emit('error', `[错误] ${msg}`, ctx.phase);
       };
 
-      interceptors.onTrack = (ctx, _track, stream) => {
+      interceptors.onTrack = (ctx, stream, event) => {
+        const kindToLabel: Record<string, string> = {
+          video: '视频',
+          audio: '音频',
+        };
+
         emit(
           'info',
-          `[事件] track — 收到远端流 (${stream.getVideoTracks().length}v / ${stream.getAudioTracks().length}a)`,
+          `[事件] track — 收到远端${kindToLabel[event.track?.kind] ?? '未知'}轨道 (${stream.getVideoTracks().length}v / ${stream.getAudioTracks().length}a)`,
           ctx.phase
         );
       };
