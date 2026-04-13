@@ -470,7 +470,8 @@ export abstract class RtcBase<
    * @param resetCount 是否重置重试计数（否则仅取消调度）
    */
   private resetReconnect(notifySuccess: boolean, resetCount = true): void {
-    const shouldNotify = notifySuccess && this._reconnectState !== 'idle';
+    const hasRetried = (this._retryController?.count ?? 0) > 0;
+    const shouldNotify = notifySuccess && (this._reconnectState !== 'idle' || hasRetried);
 
     this._reconnectState = 'idle';
     this.clearDisconnectedTimer();
@@ -488,14 +489,19 @@ export abstract class RtcBase<
 
   /**
    * 执行重连动作。
-   * 若失败则恢复 idle 以允许下一次重试调度。
+   *
+   * 注意：
+   * - performReconnect 成功仅表示“已重新发起连接流程”，并不代表已 connected。
+   * - 因此无论成功/失败，都要在本轮结束后释放 pending，
+   *   以便后续再次进入 failed 时还能触发下一次重连。
    */
   private async doReconnect(): Promise<void> {
     try {
       await this.performReconnect();
+      this._reconnectState = 'idle';
     } catch {
       this._reconnectState = 'idle';
-      this.scheduleReconnect();
+      this.beginReconnectIfIdle();
     }
   }
 
