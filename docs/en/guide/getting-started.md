@@ -23,6 +23,33 @@ pnpm add @webrtc-engine/core
 npm install @webrtc-engine/core
 ```
 
+## Use via Script Tag
+
+If you do not use a bundler, you can load the built `iife` file directly with a regular `<script>` tag. The package will be exposed on the global `WebRTCEngine` object.
+
+```html
+<script src="./dist/index.iife.js"></script>
+<script>
+  const { RtcPlayer } = WebRTCEngine;
+
+  const player = new RtcPlayer({
+    url: 'webrtc://localhost/live/livestream',
+    api: 'http://localhost:1985/rtc/v1/play/',
+    target: document.getElementById('video'),
+  });
+
+  player.play();
+</script>
+```
+
+If you also want plugins, load the corresponding local `iife` bundle as well:
+
+```html
+<script src="./dist/plugin-performance.iife.js"></script>
+```
+
+> Note: the paths above are local static asset paths. They assume you have already built the package and the current HTML page can access the generated `dist` directory.
+
 ## Playback
 
 ```typescript
