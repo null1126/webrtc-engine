@@ -1,6 +1,6 @@
 {
   "name": "@webrtc-engine/core",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "WebRTC Engine core package",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
