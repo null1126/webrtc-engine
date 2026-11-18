@@ -111,7 +111,27 @@ export class RtcPublisher extends RtcBase<
 
       await this.acquireSource(this._source, ctx);
       await this.attachStream(ctx);
-      await this.createSession(ctx);
+
+      try {
+        await this.createSession(ctx);
+      } catch (sessionErr) {
+        const signalingError =
+          sessionErr instanceof Error ? sessionErr : new Error(String(sessionErr));
+
+        this.emitError(signalingError, 'publisher.signaling');
+
+        this.resetSession();
+
+        this.pluginManager.callHook(
+          this.createHookContext(PluginPhase.PUBLISHER_STREAMING_STATE_CHANGE),
+          'onStreamingStateChange',
+          'failed'
+        );
+        this.emit('streamingstatechange', 'failed');
+        this.emit('state', RtcState.FAILED);
+
+        return false;
+      }
 
       this.emit('streamstart', { stream: this.localStream as MediaStream });
       this.pluginManager.callHook(
@@ -357,7 +377,7 @@ export class RtcPublisher extends RtcBase<
    *
    * @param candidate 本地 candidate。
    */
-  protected override onIceCandidateReceived(candidate: RTCIceCandidate): void {
+  protected override onIceCandidateReceived(candidate: RTCIceCandidate | null): void {
     const ctx = this._startCtx;
     if (!ctx) return;
 

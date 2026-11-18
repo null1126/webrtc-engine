@@ -1,0 +1,47 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-badge-failed);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  min-height: 120px;
+}
+
+.error-boundary-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.error-boundary-content strong {
+  color: var(--color-badge-failed-text);
+  font-size: 14px;
+}
+
+.error-boundary-content span {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.error-boundary-reset {
+  padding: 6px 14px;
+  background: var(--color-status-failed);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.error-boundary-reset:hover {
+  background: #b91c1c;
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import { StreamPublisher } from './components/StreamPublisher';
 import { StreamPlayer } from './components/StreamPlayer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const DEFAULT_PUBLISHER_URL = 'webrtc://localhost/live/pushstream';
 const DEFAULT_PUBLISHER_API = 'http://localhost:1985/rtc/v1/publish/';
@@ -72,18 +73,22 @@ export default function App() {
 
         {/* 双面板 */}
         <div className="app-panels">
-          <StreamPublisher
-            streamUrl={pubStreamUrl}
-            apiUrl={pubApiUrl}
-            onStreamUrlChange={setPubStreamUrl}
-            onApiUrlChange={setPubApiUrl}
-          />
-          <StreamPlayer
-            streamUrl={playerStreamUrl}
-            apiUrl={playerApiUrl}
-            onStreamUrlChange={setPlayerStreamUrl}
-            onApiUrlChange={setPlayerApiUrl}
-          />
+          <ErrorBoundary>
+            <StreamPublisher
+              streamUrl={pubStreamUrl}
+              apiUrl={pubApiUrl}
+              onStreamUrlChange={setPubStreamUrl}
+              onApiUrlChange={setPubApiUrl}
+            />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <StreamPlayer
+              streamUrl={playerStreamUrl}
+              apiUrl={playerApiUrl}
+              onStreamUrlChange={setPlayerStreamUrl}
+              onApiUrlChange={setPlayerApiUrl}
+            />
+          </ErrorBoundary>
         </div>
 
         {/* 底部说明 */}
