@@ -58,7 +58,12 @@ export function createPublisherLoggerPlugin(
 
       /** candidate 日志（截断） */
       interceptors.onIceCandidate = (ctx, data) => {
-        const c = data.candidate.candidate;
+        const candidate = data.candidate;
+        if (!candidate) {
+          emit('debug', '[ICE] 收集完成 (null candidate)', ctx.phase);
+          return;
+        }
+        const c = candidate.candidate;
         emit(
           'debug',
           `[ICE] ${c ? c.slice(0, 80) + (c.length > 80 ? '…' : '') : '(空候选)'}`,

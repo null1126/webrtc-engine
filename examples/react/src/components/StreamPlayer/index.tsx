@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   RtcPlayer,
   RtcState,
@@ -37,6 +37,15 @@ export function StreamPlayer({
   const [perfData, setPerfData] = useState<PerformanceData | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const { logs, appendLog } = useLogs();
+
+  useEffect(() => {
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    };
+  }, []);
 
   async function handleStart() {
     if (playerRef.current) return;
@@ -80,7 +89,16 @@ export function StreamPlayer({
 
     player.on('track', ({ stream }) => setRemoteStream(stream));
 
-    await player.play();
+    try {
+      await player.play();
+    } catch (err) {
+      player.destroy();
+      playerRef.current = null;
+      setState(RtcState.CLOSED);
+      setPerfData(null);
+      setRemoteStream(null);
+      appendLog('error', `启动失败：${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   function handleStop() {

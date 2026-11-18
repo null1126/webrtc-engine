@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   RtcPublisher,
   RtcState,
@@ -41,6 +41,15 @@ export function StreamPublisher({
     error: string;
   } | null>(null);
   const { logs, appendLog } = useLogs();
+
+  useEffect(() => {
+    return () => {
+      if (publisherRef.current) {
+        publisherRef.current.destroy();
+        publisherRef.current = null;
+      }
+    };
+  }, []);
 
   function setupPublisher(pub: RtcPublisher) {
     pub.on('state', (s) => setState(s));
@@ -87,9 +96,16 @@ export function StreamPublisher({
     setupPublisher(pub);
 
     try {
-      await pub.start();
+      const ok = await pub.start();
+      if (!ok) {
+        appendLog('error', '推流服务器连接失败，本地预览已就绪。请确认流媒体服务器是否启动。');
+      }
     } catch (err) {
-      console.error(err);
+      pub.destroy();
+      publisherRef.current = null;
+      setState(RtcState.CLOSED);
+      setLocalStream(null);
+      appendLog('error', `启动失败：${err instanceof Error ? err.message : String(err)}`);
     }
   }
 

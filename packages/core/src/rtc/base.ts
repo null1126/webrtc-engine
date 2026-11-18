@@ -198,10 +198,8 @@ export abstract class RtcBase<
     };
 
     pc.onicecandidate = (event) => {
-      if (event.candidate) {
-        this.emit('icecandidate', event.candidate);
-        this.onIceCandidateReceived(event.candidate);
-      }
+      this.emit('icecandidate', event?.candidate);
+      this.onIceCandidateReceived(event?.candidate);
     };
 
     pc.oniceconnectionstatechange = () => {
@@ -235,7 +233,7 @@ export abstract class RtcBase<
    *
    * @param _candidate ICE candidate。
    */
-  protected onIceCandidateReceived(_candidate: RTCIceCandidate): void {}
+  protected onIceCandidateReceived(_candidate: RTCIceCandidate | null): void {}
 
   /**
    * ICE 连接状态变化回调。

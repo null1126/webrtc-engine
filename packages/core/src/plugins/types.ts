@@ -419,7 +419,7 @@ export interface RtcPublisherPluginHooks {
   /** 推流状态变化 */
   onStreamingStateChange?(
     ctx: HookContext<RtcPublisherPluginInstance>,
-    state: 'idle' | 'connecting' | 'streaming'
+    state: 'idle' | 'connecting' | 'streaming' | 'failed'
   ): void;
   /** 停止前（可异步执行收尾逻辑） */
   onBeforeStop?(ctx: HookContext<RtcPublisherPluginInstance>): void | Promise<void>;

@@ -248,7 +248,7 @@ export class RtcPlayer extends RtcBase<
    *
    * @param candidate 本地 candidate。
    */
-  protected override onIceCandidateReceived(candidate: RTCIceCandidate): void {
+  protected override onIceCandidateReceived(candidate: RTCIceCandidate | null): void {
     const ctx = this._sessionCtx;
     if (!ctx) return;
 

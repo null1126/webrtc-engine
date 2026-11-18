@@ -182,7 +182,7 @@ export interface RtcBaseEvents {
   /** 错误事件 */
   error: string;
   /** 本地 ICE candidate 事件 */
-  icecandidate: RTCIceCandidate;
+  icecandidate: RTCIceCandidate | null;
   /** ICE 连接状态变化事件 */
   iceconnectionstate: RTCIceConnectionState;
   /** ICE 收集状态变化事件 */
@@ -230,7 +230,7 @@ export interface RtcPublisherEvents extends RtcBaseEvents {
   /** 用户拒绝媒体授权 */
   permissiondenied: { source: MediaSource; error: Error };
   /** 推流状态变化 */
-  streamingstatechange: 'idle' | 'connecting' | 'streaming';
+  streamingstatechange: 'idle' | 'connecting' | 'streaming' | 'failed';
   /** 本地轨道结束 */
   trackended: { track: MediaStreamTrack; stream: MediaStream; reason: 'ended' };
   /** 本地轨道 mute/unmute */
